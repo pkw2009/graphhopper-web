@@ -57,7 +57,12 @@ GHInput = function(str) {
         if (index >= 0) {
             this.lat = round(parseFloat(str.substr(0, index)));
             this.lng = round(parseFloat(str.substr(index + 1)));
-            this.input = this.toString();
+            if(!isNaN(this.lat) && !isNaN(this.lng)) {
+                this.input = this.toString();
+            } else {
+                this.lat = false;
+                this.lng = false;
+            }
         }
     } catch (ex) {
     }

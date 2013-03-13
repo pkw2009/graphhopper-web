@@ -23,7 +23,7 @@ var ghRequest = new GHRequest();
 ghRequest.algoVehicle = "foot";
 ghRequest.algoType = "shortest";
 
-LOCAL=true;
+LOCAL=false;
 var host;
 if(LOCAL)
     host = "http://localhost:8989";
@@ -424,17 +424,22 @@ function parseUrl(query) {
     var res = {};        
     var vars = query.split("&");
     for (var i=0;i < vars.length;i++) {
-        var pair = vars[i].split("=");
-        if(pair.length > 1 && pair[1] != null)
-            pair[1] = decodeURIComponent(pair[1].replace(/\+/g,' '));
+        var indexPos = vars[i].indexOf("=");
+        if(indexPos < 0) 
+            continue;
+        
+        var key = vars[i].substring(0, indexPos);
+        var value = vars[i].substring(indexPos + 1);
+        value = decodeURIComponent(value.replace(/\+/g,' '));
                         
-        if (typeof res[pair[0]] === "undefined")
-            res[pair[0]] = pair[1];
-        else if (typeof res[pair[0]] === "string") {
-            var arr = [ res[pair[0]], pair[1] ];
-            res[pair[0]] = arr;
+        if (typeof res[key] === "undefined")
+            res[key] = value;
+        else if (typeof res[key] === "string") {
+            var arr = [ res[key], value ];
+            res[key] = arr;
         } else
-            res[pair[0]].push(pair[1]);                   
+            res[key].push(value);
+        
     } 
     return res;
 }
